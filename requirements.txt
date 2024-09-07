@@ -1,0 +1,10 @@
+streamlit
+geopandas
+pandas
+pyogrio
+folium
+streamlit_folium
+leafmap
+matplotlib
+localtileserver==0.7.2
+psutil
