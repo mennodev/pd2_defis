@@ -8,3 +8,4 @@ leafmap
 matplotlib
 localtileserver==0.7.2
 psutil
+streamlit-image-comparison
