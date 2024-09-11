@@ -1,25 +1,10 @@
-import os
-import glob
-import altair as alt
-import pandas as pd
 import geopandas as gpd
 import pandas as pd
-import json
-
-#from PyQt5.QtWidgets.QWidget import width
-from matplotlib.pyplot import ylabel
 from pyogrio import read_dataframe
 import streamlit as st
-from streamlit_folium import folium_static
 import folium
 from streamlit_folium import st_folium
-import matplotlib.pyplot as plt
-from matplotlib.dates import MonthLocator, DateFormatter
-#from modules.nav import Navbar
-import leafmap.foliumap as leafmap
-from datetime import datetime
 from streamlit_image_comparison import image_comparison
-#from sympy.physics.units import atmosphere
 
 
 # 4. Algal bloom detection
@@ -47,7 +32,7 @@ def generate_box():
 
 
 st.title('Algal bloom detection')
-st.subheader('Description')
+st.header('Description')
 st.write('The intensive farming context of the region of Saint-Brieuc lead to nutrient runoff, contributing to the '
          'formation of algal blooms in the bay which is the outlet for all the contaminated waters. These blooms, '
          'characterized by the rapid proliferation of algae, pose significant threats to biodiversity by depleting '
@@ -57,8 +42,8 @@ st.image('data/images/algaes/algaes_detection.png', caption='Algaes proliferatio
                                                      'with S2 satellite (composite S2 image and ground photos) ')
 
 # image gallery
-st.subheader('Ground photos gallery : ')
-st.write('These photos were taken during the summer of 2024.')
+st.header('Ground photos gallery')
+st.write('These photos were taken during the summer of 2024. They show the amount of green algae that spread over the bay.')
 algaes_l = ['data/images/algaes/algaes1.png',
             'data/images/algaes/algaes2.png',
             'data/images/algaes/algaes3.png',
@@ -75,9 +60,22 @@ for i, im in enumerate(algaes_l):
     with eval(f'col{i % 3 + 1}'):
         st.image(im, use_column_width='auto')
 
+# s2 for algal bloom detection
+st.header('Copernicus data for algal blooms monitoring')
+st.write('Copernicus Sentinel-2 imagery can be used to detect algal blooms. By analysing spectral signatures, it is '
+         'possible to identify areas experiencing abnormal levels of chlorophyll, indicative of algal presence. '
+         'However, one major challenge in utilizing Sentinel-2 imagery for algal bloom detection is the intermittent '
+         'availability of data due to **cloud cover**, making some images unusable for analysis. This limitation '
+         'impedes timely monitoring and early detection of algal blooms, particularly during critical stages of their '
+         'development. Furthermore, detecting algal blooms in coastal areas, such as the bay, is more effective during '
+         'low tide when the water is shallow and the algae are more visible. This underscores the importance '
+         'of having high-cadence data, potentially daily, to enable early detection and timely intervention. ')
 
 
 # init study map
+st.subheader('Location of the region of interest')
+st.markdown('A sub-region of interest has been selected to monitor algaes proliferation. It is bordered by the city of '
+            'Saint-Brieuc to the west, the city of Yffiniac to the south, and the city of Planguenoual to the east.')
 study_map = folium.Map(location=[48.589098, -2.432541],
                        zoom_start=9,
                        attr='© OpenStreetMap contributors')
@@ -102,20 +100,13 @@ folium.GeoJson(roi).add_to(study_map)
 
 sm = st_folium(study_map, width=900, height=600)
 
-# s2 for algal bloom detection
-st.subheader('Copernicus data for algal blooms monitoring')
-st.write('Copernicus Sentinel-2 imagery can be used to detect algal blooms. By analysing spectral signatures, it is '
-         'possible to identify areas experiencing abnormal levels of chlorophyll, indicative of algal presence. '
-         'However, one major challenge in utilizing Sentinel-2 imagery for algal bloom detection is the intermittent '
-         'availability of data due to **cloud cover**, making some images unusable for analysis. This limitation '
-         'impedes timely monitoring and early detection of algal blooms, particularly during critical stages of their '
-         'development. Furthermore, detecting algal blooms in coastal areas, such as the bay, is more effective during '
-         'low tide when the water is shallow and the algae are more visible. This underscores the importance '
-         'of having high-cadence data, potentially daily, to enable early detection and timely intervention. ')
-
 # plot s2 time series
+st.subheader('Cloud cover limitation')
+st.markdown('Cloud cover is the main limitation in monitoring of green algaes as they make it impossible to see '
+            'surface of the Earth in the optical domain. Through the snapshot time series from March to November 2022 '
+            'and 2023, you can visualize the amount of clouds present in the images.')
 selected_year = st.selectbox("Select a year : ", ['2022', '2023'])
-st.image(f'data/images/algaes/s2_ts_{selected_year}.png', caption='Sentinel-2 time series')
+st.image(f'data/images/algaes/s2_ts_{selected_year}.png', caption=f'Sentinel-2 images for {selected_year}')
 if selected_year == '2023':
     st.markdown(f'The {selected_year} time series shows many cloudy observations, and few images are actually usable during this period.')
 
@@ -126,7 +117,7 @@ cloud_df['perc_cloud'] = cloud_df['perc_cloud'].astype(float)
 cloud_df['perc_cloud_norm'] = cloud_df['perc_cloud_norm'].astype(float)
 
 # let the user select cloud percentage
-selected_perc = st.slider('Select a percentage of clouds : ', min_value=0, max_value=100, value=100)
+selected_perc = st.slider('Move the cursor below to change the percentage of clouds and cloud shadows covering the sud-region : ', min_value=0, max_value=100, value=100)
 cloud23_df_filtered = cloud_df[cloud_df['perc_cloud'] <= selected_perc]
 num_points = len(cloud23_df_filtered)
 st.markdown(f'A total of {num_points} images found with less than {selected_perc} % of clouds.')
@@ -187,6 +178,7 @@ st.markdown(
         <ul>
             <li>The analysis of cloud and cloud shadow percentages indicates a lack of clear data despite the Sentinel-2's 5-days revisit time.</li>
             <li>The potential delay in obtaining clear images severely hampers the ability to monitor early-stage algal blooms.</li>
+            <li>Increasing cadence to daily observations would increase the chances of obtaining clear images.</li>
         </ul>
     </div>
     """, unsafe_allow_html=True

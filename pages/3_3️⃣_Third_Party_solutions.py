@@ -1,23 +1,9 @@
-import os
-import glob
 import altair as alt
 import pandas as pd
-import geopandas as gpd
-import pandas as pd
-import json
 from pyogrio import read_dataframe
 import streamlit as st
-from streamlit_folium import folium_static
-import folium
-from streamlit_folium import st_folium
-import matplotlib.pyplot as plt
-from matplotlib.dates import MonthLocator, DateFormatter
-#from modules.nav import Navbar
-import leafmap.foliumap as leafmap
-from datetime import datetime
 from streamlit_image_comparison import image_comparison
 from datetime import datetime, timedelta
-import numpy as np
 
 # functions
 def generate_box():
@@ -288,7 +274,7 @@ if page == 'Hedgerows monitoring':
              'as other vertebrate and invertebrate animals.')
     st.write('Finally, monitoring tree hedges is a key strategy for maintaining sustainable agriculture and protecting '
              'both water and soil quality.')
-    st.image('data/images/third_party/hedgerows_es.png', caption='Ecosystem services prodived by hedgerows.')
+    #st.image('data/images/third_party/hedgerows_es.png', caption='Ecosystem services prodived by hedgerows.')
 
     # regulations
     st.subheader('Regulations on clearing hedges')
@@ -347,16 +333,6 @@ if page == 'Hedgerows monitoring':
              'the method was then extended to cities worldwide, demonstrating its adaptability and scalability. The '
              'results show high accuracy in hedge detection, making this approach suitable for large-scale '
              'environmental monitoring, urban planning, and conservation efforts globally.')
-
-    # st.subheader('Conclusion')
-    # st.write('Hedgerows that are of major importance in preventing intensive farming activities and protecting '
-    #          'ecosystems, have been shrinking for decades in the Britany region. Despite european regulations, '
-    #          'farmers have found ways to get around BCAE regulation and keep cutting trees. The current SWF product is not a '
-    #          'good option to monitor hedges as it is not updated frequently enough and the resolution is too coarse. '
-    #          'If the S2 temporal cadence is sufficient to detect such cuts, the spatial resolution is too coarse to '
-    #          'identify trees. Meter or sub-meter resolution is needed to detect the degradations and quantify the '
-    #          'loss. Other satellites like Pleiades would be a good alternative to map changes of hedgerows, especially '
-    #          'since Pleiades proposes tri-stereo acquisitions which would improve hedgerows detection.')
 
     #highlights
     st.subheader('Highlights')

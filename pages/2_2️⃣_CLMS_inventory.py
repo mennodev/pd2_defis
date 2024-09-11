@@ -35,7 +35,7 @@ page = st.sidebar.radio('Go to', ['Corine Land Cover', 'Costal Zones', 'Riparian
                                   ])
 
 # CLMS title
-st.title('CLMS data for intensive farming monitoring (IFM)')
+st.title('Copernicus Land Monitoring Services (CLMS) data for intensive farming monitoring (IFM)')
 
 # clc
 if page == 'Corine Land Cover':
