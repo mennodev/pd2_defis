@@ -2,6 +2,7 @@ import geopandas as gpd
 import streamlit as st
 import folium
 from streamlit_folium import st_folium
+from branca.element import Template, MacroElement
 
 # function
 def map_bv():
@@ -20,26 +21,26 @@ def map_bv():
 
 # 1. context
 st.title('Context')
-st.write('In this pilot project, we aim to demonstrate an integrated approach to monitoring various aspects of '
-         'biodiversity linked to a specific region. Our focus will be on the geographically confined area of Brittany, '
-         'France, particularly the Bay of Saint-Brieuc, which faces a range of environmental challenges related to '
-         'intensive agriculture and livestock farming. Brittany’s long coastline, diverse wetlands, and Natura 2000 '
-         'sites coexist with extensive livestock operations, including pig farms that contribute to significant '
-         'nitrogen emissions, and intensive agriculture that relies heavily on fertilizers. The excess nitrogen from '
-         'both livestock and fertilizers negatively impacts the region’s fragile wetlands, Natura 2000 areas, and even '
-         'the surrounding ocean.')
+st.write('In this pilot we will demonstrate an integrated approach to monitor various biodiversity aspects that are '
+         'linked to a specific region. We will focus on the geographically confined area of Brittany in France, and '
+         'more specifically the Bay of Saint Brieuc, as the area is facing a complex of environmental issues related '
+         'to (intensive) agriculture and livestock holding. The area of Brittany has a very long coastline, various '
+         'wetlands and specific Natura2000 sites. At the same time the region also hosts significant intensive '
+         'livestock farming including pigsties and chicken farming causing nitrogen emission and deposition, as well '
+         'as intensive agriculture where large amounts of fertilizer are used. The surplus of nitrogen through '
+         'emissions from livestock farming and fertilizer usage affects the vulnerable wetlands, Natura2000 areas and '
+         'ultimately even the surrounding ocean negatively. The nitrogen from fertilizer usage is leaking via surface '
+         'waters into the ocean causing large green algae blooms in recent decades, suffocating coastal ecosystems. '
+         'Moreover, there’s an ongoing trend of felling of hedges (High Diversity Landscape Feature - HDLF) and '
+         'subsequent soil erosion adding to the further degradation of the ecosystem.')
 
-st.write('Nitrogen run-off from fertilizers into surface waters has led to widespread algae blooms in recent decades, '
-         'suffocating coastal ecosystems. Additionally, the ongoing removal of hedgerows and subsequent soil '
-         'erosion have further degraded the local environment.')
-
-st.write('Through this regional approach, we will showcase how Earth Observation (EO) technologies can be leveraged '
-         'to monitor the impacts of nitrogen emissions and deposition. We will focus on using EO missions to observe '
-         'how nitrogen surpluses affect Brittany’s wetlands and coastal areas, and how intensive farming impacts '
-         'Natura 2000 sites. The effectiveness of current sensors for mapping these interactions will be tested, '
-         'along with the potential of new, higher-cadence EO sensors. We will also explore whether higher-frequency '
-         'monitoring is more suitable for future biodiversity protection laws, and how nitrogen emissions and '
-         'deposition influence nearby nature reserves.')
+st.write('By taking this regional approach we will demonstrate how EO can aid in monitoring the effect of nitrogen '
+         'emissions and depositions, how to leverage EO-missions focusing on marine and coastal areas to monitor '
+         'effects of nitrogen surplus on wetlands and coastal zones of Brittany and how Natura2000 sites are affected '
+         'by intensive livestock farming. The current sensors to map such interlinkages will be tested together with '
+         'the limitations and cadence of new EO sensors. We will investigate if and how higher cadence is better '
+         'suited for current and future legislation on biodiversity protection, nitrogen emissions and deposition and '
+         'its effect on surrounding nature reserves in the region.  ')
 
 # 2. Objectives
 st.title('Objectives')
@@ -58,10 +59,35 @@ st.write('The study area includes NATURA 2000 sites, part of an EU ecological ne
          'catchment areas, totaling 1,225 km².')
 
 # map study area
+# legend
+legend_template = """
+{% macro html(this, kwargs) %}
+<div id='maplegend' class='maplegend' 
+    style='position: absolute; z-index: 9999; background-color: rgba(255, 255, 255, 0.5);
+     border-radius: 6px; padding: 10px; font-size: 10.5px; right: 20px; top: 20px;'>     
+<div class='legend-scale'>
+  <ul class='legend-labels'>
+    <li><span style='background: #87CEFA; border: 2px solid #1E90FF; opacity: 0.75;'></span>Natura 2000 sites</li>
+    <li><span style='background: #e6e6e6; border: 2px solid #606060; opacity: 0.75;'></span>Catchment basins</li>
+  </ul>
+</div>
+</div> 
+<style type='text/css'>
+  .maplegend .legend-scale ul {margin: 0; padding: 0; color: #0f0f0f;}
+  .maplegend .legend-scale ul li {list-style: none; line-height: 18px; margin-bottom: 1.5px;}
+  .maplegend ul.legend-labels li span {float: left; height: 16px; width: 16px; margin-right: 4.5px;}
+</style>
+{% endmacro %}
+"""
 # init study map
 study_map = folium.Map(location=[48.589098, -2.432541],
                        zoom_start=9,
                        attr='© OpenStreetMap contributors')
+
+# Add the legend to the map
+macro = MacroElement()
+macro._template = Template(legend_template)
+study_map.get_root().add_child(macro)
 
 # map catchment basin
 bv_map = map_bv()

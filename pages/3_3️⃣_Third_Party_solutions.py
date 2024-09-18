@@ -95,8 +95,8 @@ if page == 'Grassland and crops monitoring':
     # kermap solution
     st.header('Third-party product for grassland and crop detection')
     st.write('Kermap provides an annual crop classification based on analysis of time series of Copernicus Sentinel-2 '
-             'imagery. It relies on a Deep Learning approach and utilizes LPIS (Land Parcel Identification System) '
-             'data from across Europe for calibration and validation. It is generated according to two temporalities: ')
+             'imagery. It relies on a Deep Learning approach and utilizes free european data from across Europe for '
+             'calibration and validation. It is generated according to two temporalities: ')
     lst = ['The "In-Season" detection aims to identify crops in place during the season and provide monthly mapping of '
            'crops almost in real-time. ',
            'The "Full-Season" detection aims to accurately identify the predominant crop throughout the cropping year. '
