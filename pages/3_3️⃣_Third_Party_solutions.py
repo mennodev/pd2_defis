@@ -257,6 +257,21 @@ if page == 'Crop cover duration':
              'during very cloudy periods, reducing uncertainties associated with interpolating data over longer '
              'periods and providing a more precise knowledge of crop dynamics.')
 
+    #highlights
+    st.subheader('Highlights')
+    generate_box()
+    st.markdown(
+        """
+        <div class="rounded-box">
+            <ul>
+                <li>Sentinel-2 data has a 5-day revisit period. During periods of heavy cloud cover, especially in winter, there can be gaps in clear images lasting weeks or months.</li>
+                <li>Gaps complicate crop development monitoring and agricultural practices.</li>
+                <li>Daily data acquisition would help providing more cloud-free images</li>
+            </ul>
+        </div>
+        """, unsafe_allow_html=True
+    )
+
 # hedgerows
 if page == 'Hedgerows monitoring':
     st.header('Hedgerows monitoring')
